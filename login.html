@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>دخول آمن - Aman Market</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #0a0a0a; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; color: white; }
+        .login-card { background: #161616; padding: 40px; border-radius: 25px; border: 1px solid #ff4747; width: 90%; max-width: 400px; text-align: center; }
+        input { width: 100%; padding: 15px; margin: 10px 0; border-radius: 12px; border: 1px solid #333; background: #000; color: white; outline: none; box-sizing: border-box; }
+        button { width: 100%; padding: 15px; border-radius: 12px; border: none; background: #ff4747; color: white; font-size: 18px; font-weight: bold; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="login-card">
+        <h2>Aman Market 🛡️</h2>
+        <input type="text" id="user" placeholder="اسم المستخدم">
+        <input type="password" id="pass" placeholder="كلمة المرور">
+        <button onclick="checkLogin()">دخول آمن</button>
+    </div>
+
+    <script>
+        async function checkLogin() {
+            const u = document.getElementById('user').value;
+            const p = document.getElementById('pass').value;
+            try {
+                const res = await fetch('http://127.0.0.1:5000/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: u, password: p })
+                });
+                if (res.ok) {
+                    localStorage.setItem('user', u);
+                    window.location.href = "index.html";
+                } else { alert("بيانات خاطئة!"); }
+            } catch (e) { alert("السيرفر لا يستجيب! تأكد من تشغيل app.py"); }
+        }
+    </script>
+</body>
+</html>

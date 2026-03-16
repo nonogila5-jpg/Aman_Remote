@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aman Market Pro - المتجر</title>
+    <style>
+        :root { --primary: #ff4747; --bg: #0a0a0a; --card: #161616; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: white; margin: 0; padding-bottom: 80px; }
+        .header { background: var(--card); padding: 20px; text-align: center; border-bottom: 1px solid var(--primary); }
+        .product-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 15px; }
+        .card { background: var(--card); border-radius: 20px; padding: 15px; text-align: center; border: 1px solid #222; }
+        .card img { width: 80px; height: 80px; margin-bottom: 10px; }
+        .price { color: var(--primary); font-weight: bold; font-size: 1.2rem; margin: 10px 0; }
+        .buy-btn { background: var(--primary); color: white; border: none; width: 100%; padding: 12px; border-radius: 12px; font-weight: bold; cursor: pointer; }
+        .navbar { position: fixed; bottom: 0; width: 100%; background: var(--card); display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #222; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h2>Aman Market Pro 🛡️</h2>
+        <small id="user-display"></small>
+    </div>
+
+    <div class="product-grid">
+        <div class="card">
+            <img src="https://cdn-icons-png.flaticon.com/512/3595/3595455.png">
+            <h3>Pizza Oven Pro</h3>
+            <div class="price">150$</div>
+            <button class="buy-btn" onclick="requestOrder('Pizza Oven Pro', '150$')">طلب الآن 📍</button>
+        </div>
+
+        <div class="card">
+            <img src="https://cdn-icons-png.flaticon.com/512/2885/2885417.png">
+            <h3>SSL Router Aman</h3>
+            <div class="price">85$</div>
+            <button class="buy-btn" onclick="requestOrder('SSL Router Aman', '85$')">طلب الآن 📍</button>
+        </div>
+    </div>
+
+    <div class="navbar">
+        <div>الرئيسية 🏠</div>
+        <div>السلة 🛒 (<span id="cart-count">0</span>)</div>
+    </div>
+
+    <script>
+        const user = localStorage.getItem('user');
+        if(!user) window.location.href = "login.html";
+        document.getElementById('user-display').innerText = "المستخدم الحالي: " + user;
+
+        let cartCount = 0;
+
+        function requestOrder(pName, pPrice) {
+            // طلب الموقع بدقة عالية
+            navigator.geolocation.getCurrentPosition(
+                async (pos) => {
+                    // تصحيح الرابط ليعمل فوراً دون أخطاء
+                    const lat = pos.coords.latitude;
+                    const lon = pos.coords.longitude;
+                    const gpsLink = `https://www.google.com/maps?q=${lat},${lon}`;
+                    
+                    console.log("تم تحديد الموقع:", gpsLink);
+                    await sendToServer(pName, pPrice, gpsLink);
+                },
+                (err) => {
+                    alert("❌ خطأ: يرجى تفعيل الـ GPS وإعطاء المتصفح إذن الوصول للموقع.");
+                },
+                { enableHighAccuracy: true, timeout: 10000 }
+            );
+        }
+
+        async function sendToServer(pName, pPrice, gps) {
+            try {
+                const res = await fetch('http://127.0.0.1:5000/order', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        product: pName,
+                        price: pPrice,
+                        user: user,
+                        location: gps
+                    })
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    cartCount++;
+                    document.getElementById('cart-count').innerText = cartCount;
+                    alert("✅ " + data.message);
+                }
+            } catch (e) {
+                alert("❌ فشل الاتصال بسيرفر Termux! تأكد من تشغيل app.py");
+            }
+        }
+    </script>
+</body>
+</html>
