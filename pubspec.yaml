@@ -1,19 +1,35 @@
 name: aman_live_app
-description: A live streaming app for Aman Electronics.
+description: "تطبيق البث المباشر والدردشة - شركة أمان للإلكترونيات"
+publish_to: 'none'
+
 version: 1.0.0+1
 
 environment:
-  sdk: ">=3.0.0 <4.0.0"
+  sdk: '>=3.0.0 <4.0.0'
 
 dependencies:
   flutter:
     sdk: flutter
-  socket_io_client: ^2.0.3 # المكتبة الضرورية للربط مع السيرفر
-  cupertino_icons: ^1.0.2
+
+  # مكتبات Firebase الأساسية
+  firebase_core: ^3.0.0          # النواة الأساسية لربط الفايربيز
+  firebase_auth: ^5.0.0          # المسؤول عن نظام تسجيل الدخول (الايميل، جوجل، الخ)
+  cloud_firestore: ^5.0.0        # قاعدة بيانات الرسائل والشات اللحظية
+  firebase_storage: ^12.0.0      # لرفع الصور والفيديوهات (مثل صور البروفايل)
+
+  # مكتبات إضافية ضرورية
+  socket_io_client: ^2.0.3       # للربط مع سيرفر Node.js (إذا كنت ستستعمله للبث)
+  provider: ^6.1.2               # لإدارة حالة التطبيق (State Management)
+  cupertino_icons: ^1.0.6        # أيقونات النظام
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_lints: ^3.0.0
 
 flutter:
   uses-material-design: true
+
+  # إذا كان لديك صور أو أيقونات خاصة بالمشروع، أضفها هنا
+  # assets:
+  #   - assets/images/logo.png
