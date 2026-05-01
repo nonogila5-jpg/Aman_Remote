@@ -1,0 +1,19 @@
+name: aman_live_app
+description: A live streaming app for Aman Electronics.
+version: 1.0.0+1
+
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  socket_io_client: ^2.0.3 # المكتبة الضرورية للربط مع السيرفر
+  cupertino_icons: ^1.0.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
